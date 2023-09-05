@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaSearch, FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Navbottom from "./navbottom";
-
+i
 function Home() {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
@@ -39,6 +39,27 @@ function Home() {
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setSelectedFile(file);
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append("video", selectedFile);
+
+      axios
+        .post("http://127.0.0.1:5000/speaker", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          // Handle the response from the server
+          console.log("Upload successful", response.data);
+        })
+        .catch((error) => {
+          // Handle any errors
+          console.error("Error uploading file", error);
+        });
+    } else {
+      console.error("No file selected");
+    }
     const res = {
       speech_data: {
         speech_text:
